@@ -8,8 +8,7 @@ general:
 
 machine:
     environment:
-        ANDROID_HOME: 
-        - sudo apt-get install libc6-dev-i386 lib32z1 default-jdk
+        ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
     pre:
@@ -17,7 +16,7 @@ dependencies:
        # - source environmentSetup.sh && copyEnvVarsToGradleProperties
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.3,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-m2repository
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+        - ANDROID_HOME= /usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
     override:
