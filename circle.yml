@@ -16,8 +16,8 @@ dependencies:
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.1,android-25,extra-google-m2repository,extra-google-google_play_services,extra-android-support
         - chmod +x ./gradlew
-        #- ./gradlew dependencies
-        - ./gradlew test
+      #  - ./gradlew dependencies
+      #  - ./gradlew test
         - ./gradlew build --stacktrace
         - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
         - echo y | android update sdk --no-ui --all --filter "android-24, build-tools-25.0.2"
