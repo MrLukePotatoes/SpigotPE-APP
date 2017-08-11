@@ -2,8 +2,6 @@
 # Build configuration for Circle CI
 #
 
-install:
-  - chmod +x gradlew
 
 general:
     artifacts:
@@ -15,7 +13,7 @@ machine:
 
 dependencies:
     pre:
-        - wget "https://services.gradle.org/distributions/gradle-2.13-bin.zip"; unzip gradle-2.13-bin.zip
+        - wget "https://services.gradle.org/distributions/gradle-4.1-bin.zip"; unzip gradle-2.13-bin.zip
        # - source environmentSetup.sh && copyEnvVarsToGradleProperties
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.3,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-m2repository
