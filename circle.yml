@@ -8,7 +8,7 @@ general:
 
 machine:
     environment:
-        ANDROID_HOME: /usr/local/android-sdk
+        ANDROID_HOME: sudo apt-get install libc6-dev-i386 lib32z1 default-jdk
 
 dependencies:
     pre:
