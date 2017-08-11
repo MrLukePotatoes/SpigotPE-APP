@@ -114,7 +114,7 @@
 
 	<TextView
 		android:layout_height="wrap_content"
-		android:text="Released by haniokasai.The main code is taken from https://github.com/FENGberd/MinecraftPEServer."
+		android:text="SpigotPE-APP ©Copyright 2017-2018."
 		android:layout_width="match_parent"
 		android:layout_alignParentBottom="true"
 		android:gravity="center"
