@@ -21,6 +21,7 @@ dependencies:
 test:
     override:
         # start the build
+        - chmod +x ./gradlew
         - (./gradlew assemble):
             timeout: 360
         # start the emulator
