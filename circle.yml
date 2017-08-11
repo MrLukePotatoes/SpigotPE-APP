@@ -1,26 +1,47 @@
+# Java Gradle CircleCI 2.0 configuration file
 #
-# Build configuration for Circle CI
+# Check https://circleci.com/docs/2.0/language-java/ for more details
 #
-java:
-    version: oraclejdk8
-    
-general:
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+      
+      general:
     artifacts:
         - /home/ubuntu/your-app-name/app/build/outputs/apk/
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
 
-machine:
-    java:
-        version: oraclejdk8
+    working_directory: ~/repo
+
     environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    
+    steps:
+      - checkout
 
-dependencies:
-     pre:
-        - chmod +x gradlew
-        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-21.1.2,android-21,extra-google-m2repository,extra-google-google_play_services,extra-android-support
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
-test:
-    override:
-        - (./gradlew assemble):
-            timeout: 360
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+        
+      # run tests!
+      - run: gradle test
+
