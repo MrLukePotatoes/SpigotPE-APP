@@ -8,7 +8,7 @@ general:
 
 machine:
     environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux/tools/android./gradlew
+        ANDROID_HOME: /usr/local/android-sdk-linux/tools/android ./gradlew
 
 dependencies:
     pre:
