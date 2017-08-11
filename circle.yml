@@ -2,6 +2,9 @@
 # Build configuration for Circle CI
 #
 
+install:
+  - chmod +x gradlew
+
 general:
     artifacts:
         - /home/ubuntu/project-name/app/build/outputs/apk/
