@@ -2,24 +2,38 @@
 # Build configuration for Circle CI
 #
 
-general:
-    artifacts:
-        - /home/ubuntu/your-app-name/app/build/outputs/apk/
-
+## Customize the test machine
 machine:
-    java:
-        version: oraclejdk8
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
+  # Version of java to use
+  java:
+    version:
+      oraclejdk8
 
+#Install android build tools, platforms
+#Supported versions here https://circleci.com/docs/android
 dependencies:
     override:
-        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.1,android-25,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+        - echo y | android update sdk --no-ui --all --filter "tools, platform-tools"
+        # SDKs
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'platforms;android-25'
+        # build tools
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'build-tools;25.0.3'
+        # Extras
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'extras;android;m2repository'
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'extras;google;google_play_services'
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'extras;google;m2repository'
+        # NDK
+        - echo y | ${ANDROID_HOME}/tools/bin/sdkmanager 'ndk-bundle'
         - chmod +x ./gradlew
-      #  - ./gradlew dependencies
-      #  - ./gradlew test
+        - ./gradlew dependencies
+        - ./gradlew test
         - ./gradlew build --stacktrace
-        - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
-        - echo y | android update sdk --no-ui --all --filter "android-24, build-tools-25.0.2"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+
+#Pull any submodules
+checkout:
+  post:
+    - git submodule update --init --recursive
+    
+    general:
+    artifacts:
+        - /home/ubuntu/your-app-name/app/build/outputs/apk/
