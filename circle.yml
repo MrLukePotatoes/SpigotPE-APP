@@ -1,42 +1,23 @@
-general:
-    artifacts:
-        - /home/ubuntu/MyRideApp/app/build/outputs/apk/
-
 machine:
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
-        ADB_INSTALL_TIMEOUT: 240
-        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3072M -XX:+HeapDumpOnOutOfMemoryError"'
+environment:
+ANDROID_HOME: /home/ubuntu/android
+java:
+version: oraclejdk8
 
 dependencies:
-    pre:
-        - chmod +x gradlew
-        - touch app/google-services.json
-        - echo y | android update sdk --no-ui --all --filter "tools,android-25,build-tools-25.0.2,platform-tools,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services"
-    cache_directories:
-        - /usr/local/android-sdk-linux/tools
-        - /usr/local/android-sdk-linux/build-tools/25.0.2
+cache_directories:
+- ~/.android
+- ~/android
+override:
+- (echo "Downloading Android SDK v19 now!")
+- source scripts/environmentSetup.sh && getAndroidSDK
 
-    override:
-            - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies --debug
-
-# Comment the test stuff out (or remove it) if you don't need it.
 test:
-  pre:
-    - emulator -avd circleci-android23 -no-audio -no-window:
-          background: true
-          parallel: true
-    - circle-android wait-for-boot
-    # unlock emulator
-    - sleep 30
-    - adb shell input keyevent 82
-
-  override:
-#    - ./gradlew clean assemble
-    # This will run the tests:
-   - ./gradlew assemble connectedDebugAndroidTest -PdisablePreDex --console=plain --info
-
-  post:
-      - cp -r app/build/outputs $CIRCLE_ARTIFACTS
-      - cp -r app/build/outputs/androidTest-results/connected/ $CIRCLE_TEST_REPORTS
-
+pre:
+- $ANDROID_HOME/tools/emulator -avd testAVD -no-skin -no-audio -no-window
+- ./gradlew clean assembleDebug
+- ./gradlew assembleDebugTest
+- source scripts/environmentSetup.sh && waitForAVD
+override:
+- (echo "Running JUnit tests!")
+- ./gradlew connectedAndroidTest
