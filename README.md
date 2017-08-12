@@ -4,7 +4,7 @@ it is based on https://github.com/fengberd/MinecraftPEServer
 
 # Spigot-PE Twitter
 Our brand new Spigot-PE Twitter
- [Twitter](https://mobile.twitter.com/Spigot_PE)
+--> [Twitter](https://mobile.twitter.com/Spigot_PE)
 
 # LICENSE
 GPLv3 (GNU Public License version 3)
