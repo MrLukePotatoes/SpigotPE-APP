@@ -11,6 +11,8 @@ dependencies:
     - ~/.gradle
     - ~/.android
     - ~/.infer
+  pre:
+    - chmod +x gradlew
 #  pre:
    # - |
    #   mkdir -p ~/.infer
