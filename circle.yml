@@ -1,52 +1,42 @@
+general:
+    artifacts:
+        - /home/ubuntu/MyRideApp/app/build/outputs/apk/
+
 machine:
-  timezone: Asia/Tokyo
-    java:
-    version: oraclejdk7
-  environment:
-    ANDROID_HOME: /usr/local/android-sdk-linux
-    INFER_HOME: /home/ubuntu/.infer/infer-linux64-v0.1.0/infer/infer
-    PATH: $INFER_HOME/bin:$PATH
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+        ADB_INSTALL_TIMEOUT: 240
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3072M -XX:+HeapDumpOnOutOfMemoryError"'
+
 dependencies:
-  cache_directories:
-    - ~/.gradle
-    - ~/.android
-    - ~/.infer
-  pre:
-    - chmod +x gradlew
-#  pre:
-   # - |
-   #   mkdir -p ~/.infer
-    #  if [ ! -e ~/.infer/infer-linux64-v0.1.0/infer/infer/bin ]; then 
-    #    cd ~/.infer && wget https://github.com/facebook/infer/releases/download/v0.1.0/infer-linux64-v0.1.0.tar.xz
-    #   tar xf infer-linux64-v0.1.0.tar.xz
-      #  rm infer-linux64-v0.1.0.tar.xz
-    #  fi  
-      
-  override:
-    - echo y | android update sdk --no-ui --filter "android-22,build-tools-22.0.1"
-    - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
-    - echo y | android update sdk --no-ui --all --filter "android-22, build-tools-22.0.1"
-    - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-    - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+    pre:
+        - chmod +x gradlew
+        - touch app/google-services.json
+        - echo y | android update sdk --no-ui --all --filter "tools,android-25,build-tools-25.0.2,platform-tools,extra-android-m2repository,extra-android-support,extra-google-m2repository,extra-google-google_play_services"
+    cache_directories:
+        - /usr/local/android-sdk-linux/tools
+        - /usr/local/android-sdk-linux/build-tools/25.0.2
+
+    override:
+            - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+
+# Comment the test stuff out (or remove it) if you don't need it.
 test:
   pre:
-    # start the emulator
-    - emulator -avd circleci-android22 -no-skin -no-audio -no-window -no-boot-anim:
-        background: true
-        parallel: true
-  override:
-  
-    # run infer
-    - ./gradlew clean
-    - infer -i -- ./gradlew build
-    # wait for it to have booted
+    - emulator -avd circleci-android23 -no-audio -no-window:
+          background: true
+          parallel: true
     - circle-android wait-for-boot
-    # run tests  against the emulator.
-    - ./gradlew connectedAndroidTest
-    # run lint checker
-    - lint app --html app/build/outputs/result.html
+    # unlock emulator
+    - sleep 30
+    - adb shell input keyevent 82
 
-    # copy results
-    - cp -r app/build/outputs $CIRCLE_ARTIFACTS
-    - cp -r app/infer-out $CIRCLE_ARTIFACTS
-    - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+  override:
+#    - ./gradlew clean assemble
+    # This will run the tests:
+   - ./gradlew assemble connectedDebugAndroidTest -PdisablePreDex --console=plain --info
+
+  post:
+      - cp -r app/build/outputs $CIRCLE_ARTIFACTS
+      - cp -r app/build/outputs/androidTest-results/connected/ $CIRCLE_TEST_REPORTS
+
