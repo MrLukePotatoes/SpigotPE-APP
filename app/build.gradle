@@ -1,31 +1,17 @@
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.0"
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in C:\tools\adt-bundle-windows-x86_64-20131030\sdk/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the proguardFiles
+# directive in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
 
-    defaultConfig {
-        applicationId "com.haniokasai.app.pmmp_srv"
-        minSdkVersion 15
-        targetSdkVersion 21
-        versionCode 1074
-        versionName "1.0.7.4"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+# Add any project specific keep options here:
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile "com.android.support:support-v4:21.0.+"
-    apply plugin: 'com.google.gms.google-services'
-    compile 'com.google.firebase:firebase-analytics:9.4.0'
-    compile 'com.google.firebase:firebase-messaging:9.4.0'
-    compile 'com.google.firebase:firebase-ads:9.4.+'
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
-
-
-}
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
