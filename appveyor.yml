@@ -1,0 +1,42 @@
+version: '{build}'
+
+clone_folder: C:\projects\citra-android
+
+init:
+  - cd \
+  - appveyor DownloadFile https://dl.google.com/android/repository/sdk-tools-windows-3859397.zip
+  - 7z x sdk-tools-windows-3859397.zip -oc:\android-sdk > nul
+  - cd C:\projects\citra-android
+
+environment:
+  ANDROID_HOME: C:\android-sdk
+  ANDROID_NDK_HOME: C:\android-sdk\ndk-bundle
+  JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+
+install:
+  - git submodule update --init --recursive
+  - mkdir C:\android-sdk\licenses
+  - ps: 'Add-Content -Value "`n8933bad161af4178b1185d1a37fbf41ea5269c55" -Path $env:ANDROID_HOME\licenses\android-sdk-license -Encoding ASCII'
+  - ps: 'Add-Content -Value "`n84831b9409646a918e30573bab4c9c91346d8abd`n504667f4c0de7af1a06de9f4b1727b84351f2910" -Path $env:ANDROID_HOME\licenses\android-sdk-preview-license -Encoding ASCII'
+  # Tools
+  # - echo y | C:\android-sdk\tools\bin\sdkmanager tools
+  # Platform Tools
+  - echo y | C:\android-sdk\tools\bin\sdkmanager platform-tools
+  # SDKs
+  - echo y | C:\android-sdk\tools\bin\sdkmanager platforms;android-25
+  # build tools
+  - echo y | C:\android-sdk\tools\bin\sdkmanager build-tools;25.0.3
+  # Extras
+  - echo y | C:\android-sdk\tools\bin\sdkmanager extras;android;m2repository
+  - echo y | C:\android-sdk\tools\bin\sdkmanager extras;google;google_play_services
+  - echo y | C:\android-sdk\tools\bin\sdkmanager extras;google;m2repository
+  # NDK
+  - echo y | C:\android-sdk\tools\bin\sdkmanager ndk-bundle
+
+build_script:
+  - cd c:\projects\citra-android 
+  - gradlew dependencies
+  - gradlew test
+  - gradlew build --stacktrace
+
+test: off
