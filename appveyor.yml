@@ -38,8 +38,5 @@ build_script:
   - gradlew dependencies
   - gradlew test
   - gradlew build --stacktrace
-  
-  artifacts:
-- path: 'spigotpe.apk'
 
 test: off
