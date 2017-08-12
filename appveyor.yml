@@ -1,12 +1,12 @@
 version: '{build}'
 
-clone_folder: C:\projects\citra-android
+clone_folder: C:\projects\SpigotPE-APP
 
 init:
   - cd \
   - appveyor DownloadFile https://dl.google.com/android/repository/sdk-tools-windows-3859397.zip
   - 7z x sdk-tools-windows-3859397.zip -oc:\android-sdk > nul
-  - cd C:\projects\citra-android
+  - cd C:\projects\SpigotPE-APP
 
 environment:
   ANDROID_HOME: C:\android-sdk
@@ -34,9 +34,12 @@ install:
   - echo y | C:\android-sdk\tools\bin\sdkmanager ndk-bundle
 
 build_script:
-  - cd c:\projects\citra-android 
+  - cd c:\projects\SpigotPE-APP
   - gradlew dependencies
   - gradlew test
   - gradlew build --stacktrace
+  
+  artifacts:
+- path: 'spigotpe.apk'
 
 test: off
